@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBD 19th - Special Surprise ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
+        
+        body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #fff0f3; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        
+        .container { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 20px; border-radius: 25px; 
+            box-shadow: 0 10px 40px rgba(255, 77, 109, 0.2); 
+            text-align: center; max-width: 380px; width: 88%; 
+            z-index: 10; position: relative; margin: 20px auto; 
+        }
+
+        /* --- CAKE & FLAME --- */
+        .cake-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 30px; margin-bottom: 20px; animation: bounce 2s infinite ease-in-out; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .cake { position: relative; width: 140px; height: 70px; background: #f4a460; border-radius: 10px; box-shadow: 0 4px 0 #d2691e; }
+        .icing { position: absolute; top: -10px; left: 0; width: 100%; height: 22px; background: #ff85a1; border-radius: 20px; box-shadow: 0 4px 0 #fb6f92; }
+        .candles { position: absolute; top: -42px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        .candle { width: 24px; height: 45px; background: #ff4d6d; border-radius: 4px; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 2px solid #fff; }
+        .flame { display: none; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 12px; height: 22px; background: radial-gradient(#fff, #ffff00, #ff8c00); border-radius: 50% 50% 40% 40%; box-shadow: 0 0 15px orange; animation: flicker 0.1s infinite alternate; }
+        .flame.extinguish { animation: fadeOut 0.8s forwards; }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-30px) scale(0); filter: blur(2px); } }
+
+        /* --- MIC BUTTON --- */
+        #micBtn { display: none; background: #ff4d6d; color: white; width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 30px; cursor: pointer; margin: 20px auto; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 77, 109, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); } }
+
+        /* --- SECTIONS --- */
+        #photo-area, #final-message, #video-area, #choice-area, #game-area, #music-area, #game-menu { display: none; }
+        .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .photo-item { width: 100%; border-radius: 15px; border: 3px solid #ffccd5; object-fit: cover; aspect-ratio: 9/16; }
+        .photo-item.large { grid-column: span 2; } 
+        
+        .long-text { 
+            font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: #d63384; line-height: 1.6; 
+            background: #fff5f7; padding: 25px; border-radius: 15px; border: 2px dashed #ff85a1; 
+            margin-top: 10px; text-align: left; max-height: 380px; overflow-y: auto;
+        }
+
+        video { width: 100%; border-radius: 15px; margin-top: 15px; background: black; aspect-ratio: 9/16; object-fit: cover; }
+        
+        /* --- BUTTONS --- */
+        .btn { background: #ff4d6d; color: white; border: none; padding: 12px 20px; border-radius: 50px; cursor: pointer; font-weight: 600; margin-top: 10px; width: 100%; transition: 0.3s; }
+        .btn-alt { background: #ff85a1; }
+        .btn-game { background: #ffccd5; color: #d63384; margin-top: 5px; font-size: 0.85rem; border: 1px solid #ff85a1; }
+
+        /* --- GAME UI --- */
+        #game-canvas { width: 100%; height: 300px; background: #fff; border-radius: 15px; border: 2px solid #ff4d6d; position: relative; overflow: hidden; margin-top: 10px; }
+        .game-item { position: absolute; font-size: 35px; cursor: pointer; }
+        .falling { position: fixed; top: -20px; z-index: 1; pointer-events: none; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <audio id="musicRomance" loop><source src="audio1.mp3" type="audio/mpeg"></audio>
+    <audio id="musicSpecial" loop><source src="audio2.mp3" type="audio/mpeg"></audio>
+    <audio id="musicFav" loop><source src="music_kesukaan_dia.mp3" type="audio/mpeg"></audio>
+
+    <div class="container">
+        <div id="step1">
+            <div class="cake-wrapper">
+                <div class="cake"><div class="icing"></div>
+                    <div class="candles">
+                        <div class="candle"><div id="f1" class="flame"></div>1</div>
+                        <div class="candle"><div id="f2" class="flame"></div>9</div>
+                    </div>
+                </div>
+            </div>
+            <h1 style="color: #ff4d6d; font-size: 1.5rem;">Happy Birthday! ❤️</h1>
+            <p id="instruction" style="font-size: 0.85rem; color: #666; margin-bottom: 20px;">Nyalain lilinnya dulu...</p>
+            
+            <button id="actionBtn" class="btn" onclick="burn()">Bakar Lilin 🕯️</button>
+            <button id="micBtn" onclick="activateMic()">🎙️</button>
+            <p id="micStatus" style="font-size: 0.75rem; color: #ff4d6d; margin-top: 10px; display: none;">Klik mic & Tiup sekarang!</p>
+        </div>
+
+        <div id="photo-area">
+            <h3 style="color: #ff4d6d;">Today is Your Day! ✨</h3>
+            <div class="photo-grid">
+                <img src="valdidut.jpeg" class="photo-item large">
+                <img src="valdi2.jpeg" class="photo-item">
+                <img src="valdi3.jpeg" class="photo-item">
+            </div>
+            <button class="btn" onclick="showFinalMessage()">Baca Pesan Dariku ✨</button>
+        </div>
+
+        <div id="final-message">
+            <div class="long-text" id="scrollText">
+                "Selamat ulang tahun yang ke-19, Sayangku... ❤️ <br><br>
+                Hari ini adalah hari paling istimewa karena 19 tahun lalu dunia menyambut sosok sehebat kamu. Terima kasih sudah tumbuh menjadi perempuan yang luar biasa sabar dan cantik luar dalam.<br><br>
+                Di usia 19 ini, aku ingin kamu tahu kalau kamu nggak pernah sendirian. Aku bakal selalu jadi pendukung nomor satu buat semua mimpi-mimpimu. <br><br>
+                Semoga kamu selalu sehat, bahagia, dan dilindungi Tuhan di mana pun kamu berada. Maaf hanya kado digital sederhana ini yang bisa aku beri, tapi rasa sayangku ke kamu itu nggak terbatas oleh baris kode apa pun.<br><br>
+                Aku sayang kamu lebih dari kata-kata yang bisa aku tulis di sini. Tetaplah jadi kamu yang sekarang, ya. I love you so much!" 🌹✨
+            </div>
+            <button class="btn" onclick="showVideo()">Buka Kado Terakhir 🎬</button>
+        </div>
+
+        <div id="video-area">
+            <h3 style="color: #ff4d6d;">Special Video Buat Kamu 🎥</h3>
+            <video id="myVideo" controls><source src="video.mp4" type="video/mp4"></video>
+            <button class="btn" onclick="showChoice()">Lanjut ✨</button>
+        </div>
+
+        <div id="choice-area">
+            <h3 style="color: #ff4d6d;">Mau ngapain lagi nih? ❤️</h3>
+            <button class="btn" onclick="openGameMenu()">Main Game Seru 🎮</button>
+            <button class="btn btn-alt" onclick="showMusic()">Denger Musik Favoritmu 🎵</button>
+        </div>
+
+        <div id="game-menu">
+            <h3 style="color: #ff4d6d;">Pilih Tantanganmu! 🎮</h3>
+            <button class="btn btn-game" onclick="startSelectedGame(1)">1. Catch My Heart ❤️</button>
+            <button class="btn btn-game" onclick="startSelectedGame(2)">2. Avoid The Ghost! 👻</button>
+            <button class="btn btn-game" onclick="startSelectedGame(3)">3. Love Roulette 🎰</button>
+            <button class="btn btn-game" onclick="startSelectedGame(4)">4. Fast Reaction ⚡</button>
+            <button class="btn btn-game" onclick="startSelectedGame(5)">5. Hidden Treasure 🔍</button>
+            <button class="btn btn-alt" style="margin-top:15px" onclick="showChoice()">Kembali 🔙</button>
+        </div>
+
+        <div id="game-area">
+            <h3 id="gameTitle" style="color: #ff4d6d; font-size: 1.1rem;">Game</h3>
+            <div id="game-canvas"></div>
+            <h4 id="scoreBoard">Score: 0</h4>
+            <div id="game-hint" style="font-size: 0.8rem; color: #888; margin-bottom: 5px;"></div>
+            <button class="btn btn-alt" onclick="openGameMenu()">Ganti Game 🔄</button>
+        </div>
+
+        <div id="music-area">
+            <h3 style="color: #ff4d6d;">Your Favorite Song! 🎵</h3>
+            <div style="font-size: 60px; margin: 20px;">📻</div>
+            <button class="btn" onclick="location.reload()">Ulangi Dari Awal 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        const romance = document.getElementById('musicRomance');
+        const specialMusic = document.getElementById('musicSpecial');
+        const favMusic = document.getElementById('musicFav');
+        const videoElement = document.getElementById('myVideo');
+        let gameInterval, audioContext, analyser, microphone, javascriptNode;
+
+        function burn() {
+            document.getElementById('f1').style.display = 'block';
+            document.getElementById('f2').style.display = 'block';
+            romance.play();
+            document.getElementById('actionBtn').style.display = 'none';
+            document.getElementById('micBtn').style.display = 'block';
+            document.getElementById('micStatus').style.display = 'block';
+            document.getElementById('instruction').innerText = "Klik Tombol Mic & Tiup!";
+        }
+
+        async function activateMic() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(stream);
+                javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+                analyser.fftSize = 1024;
+                microphone.connect(analyser);
+                analyser.connect(javascriptNode);
+                javascriptNode.connect(audioContext.destination);
+
+                javascriptNode.onaudioprocess = function() {
+                    const array = new Uint8Array(analyser.frequencyBinCount);
+                    analyser.getByteFrequencyData(array);
+                    let values = 0;
+                    for (let i = 0; i < array.length; i++) values += array[i];
+                    if ((values / array.length) > 65) { 
+                        blow(); 
+                        stream.getTracks().forEach(t => t.stop());
+                        audioContext.close();
+                    }
+                };
+            } catch (err) {
+                alert("Klik mic gagal. Silakan klik lilinnya aja ya buat lanjut!");
+                document.getElementById('step1').onclick = blow;
+            }
+        }
+
+        function blow() {
+            document.getElementById('f1').classList.add('extinguish');
+            document.getElementById('f2').classList.add('extinguish');
+            confetti({particleCount: 150, spread: 70});
+            setTimeout(() => {
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('photo-area').style.display = 'block';
+                setInterval(createFalling, 300);
+            }, 1200);
+        }
+
+        function showFinalMessage() {
+            document.getElementById('photo-area').style.display = 'none';
+            document.getElementById('final-message').style.display = 'block';
+        }
+
+        function showVideo() {
+            document.getElementById('final-message').style.display = 'none';
+            document.getElementById('video-area').style.display = 'block';
+            romance.pause(); videoElement.play();
+        }
+
+        function showChoice() {
+            document.getElementById('video-area').style.display = 'none';
+            document.getElementById('game-menu').style.display = 'none';
+            document.getElementById('choice-area').style.display = 'block';
+            videoElement.pause();
+        }
+
+        function openGameMenu() {
+            clearInterval(gameInterval);
+            document.getElementById('choice-area').style.display = 'none';
+            document.getElementById('game-area').style.display = 'none';
+            document.getElementById('game-menu').style.display = 'block';
+            romance.pause(); favMusic.pause(); specialMusic.play();
+        }
+
+        function showMusic() {
+            document.getElementById('choice-area').style.display = 'none';
+            document.getElementById('music-area').style.display = 'block';
+            romance.pause(); specialMusic.pause(); favMusic.play();
+        }
+
+        // --- GAME LOGIC ---
+        function startSelectedGame(id) {
+            document.getElementById('game-menu').style.display = 'none';
+            document.getElementById('game-area').style.display = 'block';
+            const canvas = document.getElementById('game-canvas');
+            canvas.innerHTML = ''; score = 0;
+            document.getElementById('scoreBoard').innerText = "Score: 0";
+            clearInterval(gameInterval);
+            if(id === 1) gameInterval = setInterval(() => spawnItem('❤️', 10, true), 800);
+            else if(id === 2) gameInterval = setInterval(() => spawnItem(Math.random() > 0.7 ? '👻' : '❤️', 10, true), 600);
+            else if(id === 3) gameInterval = setInterval(() => spawnItem(['💣', '📦', '💎'][Math.floor(Math.random()*3)], 10, true), 900);
+            else if(id === 4) gameInterval = setInterval(() => { canvas.innerHTML = ''; spawnItem('⚡', 5, false); }, 2000);
+            else if(id === 5) for(let i=0; i<40; i++) spawnItem(Math.random() > 0.95 ? '💍' : '🌸', 3, false);
+        }
+
+        function spawnItem(emoji, target, auto) {
+            const canvas = document.getElementById('game-canvas');
+            const item = document.createElement('div');
+            item.className = 'game-item'; item.innerHTML = emoji;
+            item.style.left = Math.random() * (canvas.clientWidth - 40) + 'px';
+            item.style.top = Math.random() * (canvas.clientHeight - 40) + 'px';
+            item.onclick = () => {
+                if(emoji === '👻' || emoji === '💣') score -= 2;
+                else if(emoji === '💎') score += 2;
+                else if(emoji !== '🌸' && emoji !== '📦') score++;
+                document.getElementById('scoreBoard').innerText = "Score: " + Math.max(0, score);
+                item.remove();
+                if(score >= target) { clearInterval(gameInterval); setTimeout(openGameMenu, 1500); }
+            };
+            canvas.appendChild(item);
+            if(auto) setTimeout(() => item.remove(), 1200);
+        }
+
+        function createFalling() {
+            const item = document.createElement('div');
+            item.classList.add('falling');
+            item.innerHTML = ['🌸', '✨', '❤️'][Math.floor(Math.random()*3)];
+            item.style.left = Math.random() * 100 + 'vw';
+            item.style.animationDuration = (Math.random()*3+2)+'s';
+            document.body.appendChild(item);
+            setTimeout(() => item.remove(), 5000);
+        }
+    </script>
+</body>
+</html>
